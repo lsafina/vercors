@@ -8,16 +8,15 @@ import vct.col.feature
 import vct.col.newrewrite._
 import vct.col.newrewrite.exc._
 import vct.col.newrewrite.lang.NoSupportSelfLoop
+import vct.col.newveymont.{AddWritePerms}
 import vct.col.origin.FileSpanningOrigin
 import vct.col.print.Printer
 import vct.col.rewrite.{Generation, InitialGeneration, RewriterBuilder}
-import vct.col.util.ExpectedError
 import vct.main.Main.TemporarilyUnsupported
 import vct.main.stages.Transformation.TransformationCheckError
 import vct.main.util.Util
 import vct.options.{Backend, Options, PathOrStd}
 import vct.parsers.PathAdtImporter
-import vct.parsers.transform.BlameProvider
 import vct.resources.Resources
 import vct.result.VerificationError.SystemError
 
@@ -58,6 +57,10 @@ object Transformation {
           simplifyAfterRelations = options.simplifyPathsAfterRelations.map(simplifierFor(_, options)),
           checkSat = options.devCheckSat,
         )
+      case Backend.VeyMont => VeyMontTransformation(
+        onBeforePassKey = writeOutFunctions(options.outputBeforePass),
+        onAfterPassKey = writeOutFunctions(options.outputAfterPass)
+      )
     }
 }
 
@@ -188,3 +191,8 @@ case class SilverTransformation
     // PB TODO: PinSilverNodes has now become a collection of Silver oddities, it should be more structured / split out.
     PinSilverNodes,
   ))
+
+case class VeyMontTransformation(
+                                  override val onBeforePassKey: Seq[(String, Verification[_ <: Generation] => Unit)],
+                                  override val onAfterPassKey: Seq[(String, Verification[_ <: Generation] => Unit)]
+                                ) extends Transformation(onBeforePassKey, onAfterPassKey, Seq(AddWritePerms))

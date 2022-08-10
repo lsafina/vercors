@@ -26,32 +26,6 @@ trait ContextStage[-Input, Ctx, +Output] extends Stage[(Input, Ctx), (Output, Ct
   def runWithoutContext(input: Input): Output
 }
 
-case object Stages {
-  def silicon(blameProvider: BlameProvider): Stages[Seq[Readable], Unit] = {
-    Parsing(blameProvider)
-      .thenRun(Resolution(blameProvider))
-      .thenRun(SilverTransformation())
-      .thenRun(SilverBackend(Silicon()))
-      .thenRun(ExpectedErrors())
-  }
-
-  def carbon(blameProvider: BlameProvider): Stages[Seq[Readable], Unit] = {
-    Parsing(blameProvider)
-      .thenRun(Resolution(blameProvider))
-      .thenRun(SilverTransformation())
-      .thenRun(SilverBackend(Carbon()))
-      .thenRun(ExpectedErrors())
-  }
-
-  def ofOptions(options: Options, blameProvider: BlameProvider): Stages[Seq[Readable], Unit] = {
-    Parsing.ofOptions(options, blameProvider)
-      .thenRun(Resolution.ofOptions(options, blameProvider))
-      .thenRun(Transformation.ofOptions(options))
-      .thenRun(Backend.ofOptions(options))
-      .thenRun(ExpectedErrors.ofOptions(options))
-  }
-}
-
 trait Stages[-Input, +Output] {
   def run(in: Input): Either[VerificationError, Output] =
     try {

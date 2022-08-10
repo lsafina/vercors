@@ -197,7 +197,7 @@ case object Options {
         .action((_, c) => c.copy(mode = Mode.VeyMont))
         .text("Enable VeyMont mode: decompose the global program from the input files into several local programs that can be executed in parallel")
         .children(
-          opt[PathOrStd]("veymont-output").required().valueName("<path>")
+          opt[Path]("veymont-output").required().valueName("<path>")
             .action((path, c) => c.copy(veymontOutput = path))
         ),
 
@@ -307,7 +307,7 @@ case class Options
   devViperProverLogFile: Option[Path] = None,
 
   // VeyMont options
-  veymontOutput: PathOrStd = null, // required
+  veymontOutput: Path = null, // required
 
   // Batch test options
   testDir: Path = null, // required
