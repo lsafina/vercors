@@ -61,7 +61,7 @@ case object Verify extends LazyLogging {
   def ofOptions(options: Options, blameProvider: BlameProvider): Stages[Seq[Readable], Unit] = {
     Parsing.ofOptions(options, blameProvider)
       .thenRun(Resolution.ofOptions(options, blameProvider))
-      .thenRun(Transformation.ofOptions(options))
+      .thenRun(Transformation.viperOfOptions(options))
       .thenRun(Backend.ofOptions(options))
       .thenRun(ExpectedErrors.ofOptions(options))
   }

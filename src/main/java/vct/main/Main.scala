@@ -61,7 +61,7 @@ case object Main extends LazyLogging {
         Verify.runOptions(options)
       case Mode.HelpVerifyPasses =>
         logger.info("Available passes:")
-        Transformation.ofOptions(options).passes.foreach { pass =>
+        Transformation.viperOfOptions(options).passes.foreach { pass =>
           logger.info(s" - ${pass.key}")
           logger.info(s"    ${pass.desc}")
         }

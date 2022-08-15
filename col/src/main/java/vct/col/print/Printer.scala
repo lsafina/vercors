@@ -568,6 +568,7 @@ case class Printer(out: Appendable,
       statement(assoc(100, obj), ".", name(ref.decl), "(", commas(args.map(NodePhrase)), ")")
     case InvokeProcedure(ref, args, outArgs, typeArgs, givenMap, yields) =>
       statement(name(ref.decl), "(", commas(args.map(NodePhrase)), ")")
+    case Commit(obj) => statement("commit", space, obj)
   })
 
   def printExpr(e: Expr[_]): Unit =
@@ -786,6 +787,8 @@ case class Printer(out: Appendable,
       (phrase(assoc(70, left), space, "+", space, assoc(70, right)), 70)
     case Minus(left, right) =>
       (phrase(assoc(70, left), space, "-", space, bind(70, right)), 70)
+    case AmbiguousMinus(left, right) =>
+      (phrase(assoc(70, left), space, "-", space, bind(70, right)), 70)
     case AmbiguousMult(left, right) =>
       (phrase(assoc(80, left), space, "*", space, assoc(80, right)), 80)
     case Mult(left, right) =>
@@ -822,11 +825,19 @@ case class Printer(out: Appendable,
       (phrase(bind(50, left), space, "!=", space, bind(50, right)), 50)
     case Greater(left, right) =>
       (phrase(bind(60, left), space, ">", space, bind(60, right)), 60)
+    case AmbiguousGreater(left, right) =>
+      (phrase(bind(60, left), space, ">", space, bind(60, right)), 60)
     case Less(left, right) =>
+      (phrase(bind(60, left), space, "<", space, bind(60, right)), 60)
+    case AmbiguousLess(left, right) =>
       (phrase(bind(60, left), space, "<", space, bind(60, right)), 60)
     case GreaterEq(left, right) =>
       (phrase(bind(60, left), space, ">=", space, bind(60, right)), 60)
+    case AmbiguousGreaterEq(left, right) =>
+      (phrase(bind(60, left), space, ">=", space, bind(60, right)), 60)
     case LessEq(left, right) =>
+      (phrase(bind(60, left), space, "<=", space, bind(60, right)), 60)
+    case AmbiguousLessEq(left, right) =>
       (phrase(bind(60, left), space, "<=", space, bind(60, right)), 60)
     case SubSet(left, right) =>
       ???

@@ -46,7 +46,7 @@ object Transformation {
       debugFilterRule = options.devSimplifyDebugFilterRule,
     )
 
-  def ofOptions(options: Options): Transformation =
+  def viperOfOptions(options: Options): Transformation =
     options.backend match {
       case Backend.Silicon | Backend.Carbon =>
         SilverTransformation(
@@ -57,11 +57,14 @@ object Transformation {
           simplifyAfterRelations = options.simplifyPathsAfterRelations.map(simplifierFor(_, options)),
           checkSat = options.devCheckSat,
         )
-      case Backend.VeyMont => VeyMontTransformation(
-        onBeforePassKey = writeOutFunctions(options.outputBeforePass),
-        onAfterPassKey = writeOutFunctions(options.outputAfterPass)
-      )
     }
+
+  def veymontOfOptions(options: Options) : Transformation = {
+    VeyMontTransformation(
+      onBeforePassKey = writeOutFunctions(options.outputBeforePass),
+      onAfterPassKey = writeOutFunctions(options.outputAfterPass)
+    )
+  }
 }
 
 class Transformation
