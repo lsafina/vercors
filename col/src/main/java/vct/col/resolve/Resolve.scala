@@ -8,16 +8,11 @@ import vct.col.origin._
 import vct.col.resolve.ctx._
 import vct.col.resolve.lang.{C, Java, PVL, Spec}
 
-case object Resolve {
-  def resolve(program: Program[_], externalJavaLoader: Option[ExternalJavaLoader] = None): Seq[CheckError] = {
-    ResolveTypes.resolve(program, externalJavaLoader)
-    ResolveReferences.resolve(program)
-  }
-}
+import java.nio.file.Path
 
 case object ResolveTypes {
-  def resolve[G](program: Program[G], externalJavaLoader: Option[ExternalJavaLoader] = None): Seq[GlobalDeclaration[G]] = {
-    val ctx = TypeResolutionContext[G](externalJavaLoader = externalJavaLoader)
+  def resolve[G](program: Program[G], externalJavaLoader: Option[ExternalJavaLoader] = None, path: Option[Path]): Seq[GlobalDeclaration[G]] = {
+    val ctx = TypeResolutionContext[G](externalJavaLoader = externalJavaLoader, jrePath = path)
     resolve(program, ctx)
     ctx.externallyLoadedElements.toSeq
   }

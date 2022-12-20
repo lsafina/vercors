@@ -163,10 +163,18 @@ case object Java {
     }
   }
 
-  def findLibraryJavaType[G](name: Seq[String], ctx: TypeResolutionContext[G]): Option[JavaTypeNameTarget[G]] =
-    ctx.externalJavaLoader match {
-      case Some(loader) =>
-        loader.load[G](name) match {
+  def findLibraryJavaType[G](name: Seq[String], ctx: TypeResolutionContext[G]): Option[JavaTypeNameTarget[G]] = {
+    ctx.externalJavaLoader.flatMap{ loader =>
+      ctx.namespace.flatMap{
+
+      }.orElse ctx.jrePath.flatMap {
+
+      }
+    }
+
+    (ctx.externalJavaLoader, ctx.jrePath) match {
+      case (Some(loader), Some(path)) =>
+        loader.load[G](path, name) match {
           case Some(ns) =>
             ctx.externallyLoadedElements += ns
             ResolveTypes.resolve(ns, ctx)
@@ -178,8 +186,9 @@ case object Java {
             }
           case None => None
         }
-      case None => None
+      case _ => None
     }
+  }
 
   def findJavaTypeName[G](names: Seq[String], ctx: TypeResolutionContext[G]): Option[JavaTypeNameTarget[G]] = {
     val potentialFQNames: Seq[Seq[String]] = names match {

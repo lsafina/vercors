@@ -56,7 +56,7 @@ case class Resolution[G <: Generation]
     implicit val o: Origin = FileSpanningOrigin
 
     val parsedProgram = Program(in.decls)(blameProvider())
-    val extraDecls = ResolveTypes.resolve(parsedProgram, Some(JavaLibraryLoader(javaLibraryPath, blameProvider)))
+    val extraDecls = ResolveTypes.resolve(parsedProgram, Some(JavaLibraryLoader(blameProvider)), Some(javaLibraryPath))
     val joinedProgram = Program(parsedProgram.declarations ++ extraDecls)(blameProvider())
     val typedProgram = LangTypesToCol().dispatch(joinedProgram)
     ResolveReferences.resolve(typedProgram) match {
