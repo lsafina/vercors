@@ -487,7 +487,7 @@ case class ArrayValuesPerm(node: Values[_]) extends ArrayValuesError {
 sealed trait PointerSubscriptError extends FrontendSubscriptError
 sealed trait PointerDerefError extends PointerSubscriptError
 sealed trait PointerLocationError extends PointerDerefError
-sealed trait PointerAddError extends FrontendAdditiveError
+sealed trait PointerAddError extends FrontendAdditiveError with PointerSubscriptError
 case class PointerNull(node: Expr[_]) extends PointerLocationError with PointerAddError with NodeVerificationFailure {
   override def code: String = "ptrNull"
   override def descInContext: String = "Pointer may be null."

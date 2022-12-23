@@ -161,6 +161,7 @@ case class SilverTransformation
 
     // Normalize AST
     Disambiguate, // Resolve overloaded operators (+, subscript, etc.)
+    ResolveTrivialAddrOf,
     DisambiguateLocation, // Resolve location type
     CollectLocalDeclarations, // all decls in Scope
     DesugarPermissionOperators, // no PointsTo, \pointer, etc.

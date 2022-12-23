@@ -1,7 +1,7 @@
 package vct.main.stages
 
 import hre.stages.Stage
-import vct.col.ast.{AddrOf, CGlobalDeclaration, Program, Refute, Verification, VerificationContext}
+import vct.col.ast.{AddrOf, AmbiguousSubscript, CGlobalDeclaration, DerefPointer, Program, Refute, Verification, VerificationContext}
 import vct.col.check.CheckError
 import vct.col.rewrite.lang.{LangSpecificToCol, LangTypesToCol}
 import vct.col.origin.{ExpectedError, FileSpanningOrigin, Origin}
@@ -57,6 +57,8 @@ case class Resolution[G <: Generation]
           throw TemporarilyUnsupported("GlobalCVariable", Seq(decl))
         }
       })
+      case AddrOf(DerefPointer(_)) =>
+      case AddrOf(AmbiguousSubscript(_, _)) =>
       case addrOf: AddrOf[_] => throw TemporarilyUnsupported("&", Seq(addrOf))
       case _ =>
     })
